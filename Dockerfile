@@ -10,7 +10,7 @@ WORKDIR /workspace
 COPY . .
 RUN gradle clean bootJar --no-daemon
 
-# ---- runtime stage ----
+# ---- runtime stage (named 'final') ----
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 # copy the built jar (adjust name if not SNAPSHOT)
