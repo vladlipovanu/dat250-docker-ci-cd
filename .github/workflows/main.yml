@@ -39,5 +39,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          target: final
           tags: docker.io/${{ vars.DOCKER_USERNAME }}/${{ env.REPO_NAME }}:latest
