@@ -1,0 +1,73 @@
+### Create a new user
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "email" : "test@email.com"
+}
+
+### List all users
+GET localhost:8080/users
+
+### Create a second user
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "bob",
+  "email" : "test2@email.com"
+}
+
+### List all users
+GET localhost:8080/users
+
+### Sanity check
+GET http://localhost:8080/polls/ping
+
+### User 1 creates a poll
+POST http://localhost:8080/polls
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "alice",
+    "email": "alice@example.com"
+  },
+  "poll": {
+    "question": "What is the meaning of life?",
+    "publishedAt": "2025-08-29T17:35:00Z",
+    "validUntil": "2025-08-29T17:45:00Z"
+  }
+}
+
+### Get the poll
+GET http://localhost:8080/polls
+
+
+### User 2 votes on the poll
+PUT http://localhost:8080/polls
+Content-Type: application/json
+
+{
+  "publishedAt": "2025-08-29T17:36:00Z"
+}
+
+### User 2 change vote on the poll
+PUT http://localhost:8080/polls
+Content-Type: application/json
+
+{
+  "publishedAt": "2025-08-29T17:36:00Z"
+}
+
+
+### List votes
+GET http://localhost:8080/votes
+
+### Delete poll
+DELETE http://localhost:8080/polls
+
+### List votes
+GET http://localhost:8080/votes
+
