@@ -32,6 +32,52 @@ jobs:
           target: test
           load: true
 
+      - name: Set up JDK for API testing
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Node.js for httpyac
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install httpyac
+        run: npm install -g httpyac
+
+      - name: Start Spring Boot application for API testing
+        run: |
+          echo "Starting Spring Boot application..."
+          mvn spring-boot:run &
+          echo $! > app.pid
+          
+          # Wait for application to start
+          echo "Waiting for application to start..."
+          for i in {1..30}; do
+            if curl -f http://localhost:8080/actuator/health 2>/dev/null || curl -f http://localhost:8080/users 2>/dev/null; then
+              echo "Application is ready!"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
+          done
+
+      - name: Run HTTP Client API Tests
+        run: |
+          echo "Running API integration tests..."
+          httpyac rest-api.http --all
+
+      - name: Stop Spring Boot application
+        if: always()
+        run: |
+          if [ -f app.pid ]; then
+            PID=$(cat app.pid)
+            kill $PID || true
+            rm app.pid
+          fi
+          pkill -f "spring-boot:run" || true
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
