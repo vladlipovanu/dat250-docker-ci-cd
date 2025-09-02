@@ -32,51 +32,72 @@ jobs:
           target: test
           load: true
 
+      # Simple API tests with curl
       - name: Set up JDK for API testing
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Setup Node.js for httpyac
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install httpyac
-        run: npm install -g httpyac
-
-      - name: Start Spring Boot application for API testing
+      - name: Start Spring Boot app and run basic API tests
         run: |
           echo "Starting Spring Boot application..."
-          mvn spring-boot:run &
-          echo $! > app.pid
+          mvn spring-boot:run > app.log 2>&1 &
+          APP_PID=$!
           
-          # Wait for application to start
-          echo "Waiting for application to start..."
-          for i in {1..30}; do
-            if curl -f http://localhost:8080/actuator/health 2>/dev/null || curl -f http://localhost:8080/users 2>/dev/null; then
-              echo "Application is ready!"
-              break
-            fi
-            echo "Waiting... ($i/30)"
-            sleep 2
-          done
-
-      - name: Run HTTP Client API Tests
-        run: |
-          echo "Running API integration tests..."
-          httpyac rest-api.http --all
-
-      - name: Stop Spring Boot application
-        if: always()
-        run: |
-          if [ -f app.pid ]; then
-            PID=$(cat app.pid)
-            kill $PID || true
-            rm app.pid
-          fi
-          pkill -f "spring-boot:run" || true
+          # Wait for startup
+          echo "Waiting for application..."
+          sleep 45
+          
+          # Simple curl-based tests
+          echo "Testing API endpoints..."
+          
+          # Test 1: Create user Alice
+          echo "Creating Alice..."
+          curl -f -X POST http://127.0.0.1:8080/users \
+            -H "Content-Type: application/json" \
+            -d '{"username": "alice", "email": "test@email.com"}' || exit 1
+          
+          # Test 2: Create user Bob  
+          echo "Creating Bob..."
+          curl -f -X POST http://127.0.0.1:8080/users \
+            -H "Content-Type: application/json" \
+            -d '{"username": "bob", "email": "test2@email.com"}' || exit 1
+          
+          # Test 3: List users
+          echo "Listing users..."
+          curl -f http://127.0.0.1:8080/users || exit 1
+          
+          # Test 4: Create poll
+          echo "Creating poll..."
+          curl -f -X POST http://127.0.0.1:8080/polls \
+            -H "Content-Type: application/json" \
+            -d '{
+              "user": {"username": "alice", "email": "alice@example.com"},
+              "poll": {
+                "question": "What is the meaning of life?",
+                "publishedAt": "2025-08-29T17:35:00Z",
+                "validUntil": "2025-08-29T17:45:00Z"
+              },
+              "voteOptions": [
+                {"caption": "To be free", "presentationOrder": 1},
+                {"caption": "To eat pizza", "presentationOrder": 2}
+              ]
+            }' || exit 1
+          
+          # Test 5: Vote
+          echo "Voting..."
+          curl -f -X POST http://127.0.0.1:8080/vote \
+            -H "Content-Type: application/json" \
+            -d '{
+              "user": {"username": "bob", "email": "test2@email.com"},
+              "vote": {"publishedAt": "2025-08-29T17:36:00Z", "voteOption": 1}
+            }' || exit 1
+          
+          echo "All API tests passed!"
+          
+          # Cleanup
+          kill $APP_PID || true
 
       - name: Build and push
         uses: docker/build-push-action@v6
