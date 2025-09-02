@@ -7,8 +7,23 @@ Content-Type: application/json
   "email" : "test@email.com"
 }
 
+> {%
+    client.test("Create user alice", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.username === "alice", "Username should be alice");
+    });
+%}
+
 ### List all users
-GET localhost:8080/users
+GET http://localhost:8080/users
+
+> {%
+    client.test("List users should contain alice", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.length >= 1, "Should have at least 1 user");
+        client.assert(response.body.some(user => user.username === "alice"), "Should contain alice");
+    });
+%}
 
 ### Create a second user
 POST http://localhost:8080/users
@@ -19,11 +34,24 @@ Content-Type: application/json
   "email" : "test2@email.com"
 }
 
-### List all users
-GET localhost:8080/users
+> {%
+    client.test("Create user bob", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.username === "bob", "Username should be bob");
+    });
+%}
 
-### Sanity check
-GET http://localhost:8080/polls/ping
+### List all users
+GET http://localhost:8080/users
+
+> {%
+    client.test("List users should contain both alice and bob", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.length === 2, "Should have 2 users");
+        client.assert(response.body.some(user => user.username === "alice"), "Should contain alice");
+        client.assert(response.body.some(user => user.username === "bob"), "Should contain bob");
+    });
+%}
 
 ### User 1 creates a poll
 POST http://localhost:8080/polls
@@ -38,36 +66,115 @@ Content-Type: application/json
     "question": "What is the meaning of life?",
     "publishedAt": "2025-08-29T17:35:00Z",
     "validUntil": "2025-08-29T17:45:00Z"
-  }
+  },
+  "voteOptions": [
+    {
+      "caption": "To be free",
+      "presentationOrder": 1
+    },
+    {
+      "caption": "To eat a lot of pizza",
+      "presentationOrder": 2
+    }
+  ]
 }
+
+> {%
+    client.test("Create poll", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.question === "What is the meaning of life?", "Poll question should match");
+        client.assert(response.body.voteOptions.length === 2, "Should have 2 vote options");
+    });
+%}
 
 ### Get the poll
 GET http://localhost:8080/polls
 
+> {%
+    client.test("Get polls should return created poll", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.length >= 1, "Should have at least 1 poll");
+        client.assert(response.body.some(poll => poll.question === "What is the meaning of life?"), "Should contain the created poll");
+    });
+%}
 
 ### User 2 votes on the poll
-PUT http://localhost:8080/polls
+POST http://localhost:8080/vote
 Content-Type: application/json
 
 {
-  "publishedAt": "2025-08-29T17:36:00Z"
+  "user": {
+    "username": "bob",
+    "email": "test2@email.com"
+  },
+  "vote" :
+  {
+    "publishedAt": "2025-08-29T17:36:00Z",
+    "voteOption" : 1
+  }
 }
+
+> {%
+    client.test("User votes successfully", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.username === "bob", "Should return bob user");
+        client.assert(response.body.votes.length === 1, "Should have 1 vote");
+        client.assert(response.body.votes[0].voteOption === 1, "Should vote for option 1");
+    });
+%}
 
 ### User 2 change vote on the poll
-PUT http://localhost:8080/polls
+PUT http://localhost:8080/vote
 Content-Type: application/json
 
 {
-  "publishedAt": "2025-08-29T17:36:00Z"
+  "user": {
+    "username": "bob",
+    "email": "test2@email.com"
+  },
+  "vote" :
+  {
+    "publishedAt": "2025-08-29T17:36:00Z",
+    "voteOption" : 2
+  }
 }
 
+> {%
+    client.test("User changes vote successfully", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.username === "bob", "Should return bob user");
+        client.assert(response.body.votes.length === 1, "Should have 1 vote");
+        client.assert(response.body.votes[0].voteOption === 2, "Should vote for option 2");
+    });
+%}
 
 ### List votes
-GET http://localhost:8080/votes
+GET http://localhost:8080/vote
+
+> {%
+    client.test("List votes should show updated vote", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.length === 1, "Should have 1 vote");
+        client.assert(response.body[0].voteOption === 2, "Vote should be for option 2");
+    });
+%}
 
 ### Delete poll
-DELETE http://localhost:8080/polls
+DELETE http://localhost:8080/polls?question=What is the meaning of life?
 
-### List votes
-GET http://localhost:8080/votes
+> {%
+    client.test("Delete poll successfully", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body === true, "Should return true for successful deletion");
+    });
+%}
 
+### List votes after poll deletion
+GET http://localhost:8080/vote
+
+> {%
+    client.test("List votes should be empty after poll deletion", function() {
+        client.assert(response.status === 200, "Expected status 200");
+        client.assert(response.body.length === 0, "Should have no votes after poll deletion");
+    });
+%}

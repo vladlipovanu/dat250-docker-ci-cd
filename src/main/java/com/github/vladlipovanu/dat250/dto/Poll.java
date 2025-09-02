@@ -1,12 +1,15 @@
 package com.github.vladlipovanu.dat250.dto;
 
 import java.time.Instant;
+import java.util.List;
 
 
 public class Poll implements java.io.Serializable {
     private String question;
     private Instant publishedAt;
     private Instant validUntil;
+    private List<VoteOption> voteOptions;
+
 
 
     public Poll () { // does nothing atm
@@ -34,5 +37,13 @@ public class Poll implements java.io.Serializable {
 
     public void setValidUntil(Instant validUntil) {
         this.validUntil = validUntil;
+    }
+
+    public List<VoteOption> getVoteOptions() {
+        return voteOptions;
+    }
+
+    public void setVoteOptions(List<VoteOption> voteOptions) {
+        this.voteOptions = voteOptions;
     }
 }

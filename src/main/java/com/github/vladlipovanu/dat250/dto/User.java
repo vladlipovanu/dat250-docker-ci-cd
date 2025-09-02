@@ -1,8 +1,11 @@
 package com.github.vladlipovanu.dat250.dto;
 
+import java.util.List;
+
 public class User implements java.io.Serializable {
     private String username;
     private String email;
+    private List<Vote> votes;
 
 
     public User() { // does nothing atm
@@ -24,4 +27,11 @@ public class User implements java.io.Serializable {
         return email;
     }
 
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
 }

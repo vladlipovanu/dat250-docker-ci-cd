@@ -4,6 +4,7 @@ import java.time.Instant;
 
 public class Vote  implements java.io.Serializable {
     private Instant publishedAt;
+    private int voteOption;
 
     public Vote () { // does nothing atm
         }
@@ -12,7 +13,16 @@ public class Vote  implements java.io.Serializable {
         return publishedAt;
     }
 
+    public int getVoteOption() {
+        return voteOption;
+    }
+
+    public void setVoteOption(int voteOption) {
+        this.voteOption = voteOption;
+    }
+
     public void setPublishedAt(Instant publishedAt) {
         this.publishedAt = publishedAt;
     }
+
 }
