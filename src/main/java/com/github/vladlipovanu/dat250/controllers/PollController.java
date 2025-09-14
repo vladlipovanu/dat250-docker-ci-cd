@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Set;
 
+@CrossOrigin(origins="*")
 @RestController
-@RequestMapping("/polls")
+@RequestMapping("/api")
 public class PollController {
     private final PollManager pollManager;
 
@@ -17,7 +18,7 @@ public class PollController {
         this.pollManager = pollManager;
     }
 
-    @PostMapping
+    @PostMapping("/polls")
     public Poll addPoll(@RequestBody CreatePollRequest request) {
 
         if (request.getPoll() == null) {
@@ -31,12 +32,12 @@ public class PollController {
         return newPoll;
     }
 
-    @GetMapping
+    @GetMapping("/polls")
     public Set<Poll> getPolls() {
        return pollManager.getPolls();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/polls")
     public boolean deletePoll(@RequestParam String question) {
         pollManager.cleanupNullPolls();
 

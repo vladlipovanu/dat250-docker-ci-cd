@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@CrossOrigin(origins="*")
 @RestController
-@RequestMapping("/vote")
+@RequestMapping("/api")
 public class VoteController {
     private final PollManager pollManager;
 
@@ -17,7 +17,7 @@ public class VoteController {
         this.pollManager = pollManager;
     }
 
-    @PostMapping
+    @PostMapping("/vote")
     public User voteRequest(@RequestBody CreateVoteRequest request) {
         User user = request.getUser();
         if (user.getVotes() == null) {
@@ -28,7 +28,7 @@ public class VoteController {
         return user;
     }
 
-    @PutMapping
+    @PutMapping("/vote")
     public User updateVote(@RequestBody CreateVoteRequest request) {
         User requestUser = request.getUser();
         Vote newVote = request.getVote();
@@ -47,7 +47,7 @@ public class VoteController {
         return updatedUser;
     }
 
-    @GetMapping()
+    @GetMapping("/vote")
     public List<Vote> getVotes() {
         List<Vote> allVotes = new ArrayList<>();
 
