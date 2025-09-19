@@ -26,7 +26,7 @@ public class PollManager implements java.io.Serializable {
         return results.get(poll);
     }
     public Poll addVoteOptions(Poll poll, List<VoteOption> voteOptions) {
-       poll.setVoteOptions(voteOptions);
+       poll.setOptions(voteOptions);
        return poll;
     }
     public HashMap<Poll, User> getResults() {
