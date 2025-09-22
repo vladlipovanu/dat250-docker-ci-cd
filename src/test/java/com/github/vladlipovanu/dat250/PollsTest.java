@@ -3,9 +3,13 @@ package com.github.vladlipovanu.dat250;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceConfiguration;
+import org.h2.tools.Server;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,6 +27,11 @@ public class PollsTest {
     private EntityManagerFactory emf;
 
 
+
+@BeforeAll
+public static void startH2Console() throws SQLException {
+ Server.createWebServer("-web","-webAllowOthers", "-webPort", "8082").start();
+}
     private void populate(EntityManager em) {
         User alice = new User("alice", "alice@online.com");
         User bob = new User("bob", "bob@bob.home");
@@ -44,8 +53,11 @@ public class PollsTest {
         em.persist(eve.voteFor(yes));
     }
 
+
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception{
+
+
         EntityManagerFactory emf = new PersistenceConfiguration("polls")
                 .managedClass(Poll.class)
                 .managedClass(User.class)
@@ -55,11 +67,23 @@ public class PollsTest {
                 .property(PersistenceConfiguration.SCHEMAGEN_DATABASE_ACTION, "drop-and-create")
                 .property(PersistenceConfiguration.JDBC_USER, "sa")
                 .property(PersistenceConfiguration.JDBC_PASSWORD, "")
+                .property("hibernate.show_sql", "true")
+                .property("hibernate.format_sql", "true")
+                .property("hibernate.use_sql_comments", "true")
+                .property("hibernate.highlight_sql", "true")
                 .createEntityManagerFactory();
+
+        this.emf = emf;
+
+        Thread.sleep(30_000);
         emf.runInTransaction(em -> {
             populate(em);
         });
-        this.emf = emf;
+    }
+
+    @AfterEach
+    public void waitMoments() throws Exception{
+        Thread.sleep(60_000);
     }
 
     @Test
@@ -67,9 +91,9 @@ public class PollsTest {
         emf.runInTransaction(em -> {
             Integer actual = (Integer) em.createNativeQuery("select count(id) from users", Integer.class).getSingleResult();
             assertEquals(3, actual);
-
             User maybeBob = em.createQuery("select u from User u where u.username like 'bob'", User.class).getSingleResultOrNull();
             assertNotNull(maybeBob);
+
         });
     }
 

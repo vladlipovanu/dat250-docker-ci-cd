@@ -25,10 +25,23 @@
 2. Fixing the methods with the proper logic resulted in the tests going green.
 
 
-
 **_Model Entity_**
 
 ![img.png](img.png)
+
+
+**Explanation for the tests**
+1. Before running each test in particular, the database will be created locally, since we are using H2 Database Engine in order to test the ORM. For this, I made a local server where we can connect to the GUI of the database, in order to inspect the state in which the database is.
+2. So from the first picture, we can see that the database is just created, but not populated yet. In order to check when the database is populated, I added the sql statements property in the **_setup_** method to check what's send.
+![img_2.png](img_2.png)
+3. The next three pictures shows the SQL queries which are used everytime for each test, since we have the property of drop and create in the **_setup_**. This means they are recreated for each test individually.
+![img_4.png](img_4.png)
+![img_5.png](img_5.png)
+![img_6.png](img_6.png)
+4. For the last picture, this is how the database looks like after the running of all the required SQL queries. In this GUI we can also try and mimic the queries from the test in order to see if the information we are receiving is correct.
+![img_3.png](img_3.png)
+![img_7.png](img_7.png)
+
 
 **_Test Result_**
 
