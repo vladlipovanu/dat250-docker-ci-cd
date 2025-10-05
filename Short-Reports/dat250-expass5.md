@@ -54,4 +54,4 @@
 4. I was getting some errors because of the imports that I had, and I didn't have the required dependency to work wit h the Redis data, so I had to fix this in order to continue.
 5. The last step was to use the same structure from previous step and implement the cache methods for testing. After calling them and getting the data, I could see that the caching was way faster.
 
-![Screenshot 2025-10-05 230236.png](../pictures/Screenshots%2FScreenshot%202025-10-05%20230236.png)
+![Screenshot 2025-10-05 230236.png](../pictures/Screenshot%202025-10-05%20230236.png)
