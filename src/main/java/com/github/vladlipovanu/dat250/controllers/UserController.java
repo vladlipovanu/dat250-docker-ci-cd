@@ -1,6 +1,6 @@
 package com.github.vladlipovanu.dat250.controllers;
 
-import com.github.vladlipovanu.dat250.dto.User;
+import com.github.vladlipovanu.dat250.entities.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

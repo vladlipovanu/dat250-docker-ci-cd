@@ -1,4 +1,4 @@
-package com.github.vladlipovanu.dat250.dto;
+package com.github.vladlipovanu.dat250.entities;
 
 import jakarta.persistence.*;
 
@@ -87,5 +87,9 @@ public class User implements java.io.Serializable {
         newVote.setVotesOn(option);
         this.votes.add(newVote);
         return newVote;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

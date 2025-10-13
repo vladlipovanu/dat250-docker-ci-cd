@@ -1,4 +1,4 @@
-package com.github.vladlipovanu.dat250.dto;
+package com.github.vladlipovanu.dat250.entities;
 
 import org.springframework.stereotype.Component;
 

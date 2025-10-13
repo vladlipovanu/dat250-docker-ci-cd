@@ -1,7 +1,11 @@
 package com.github.vladlipovanu.dat250.controllers;
 
-import com.github.vladlipovanu.dat250.dto.*;
+import com.github.vladlipovanu.dat250.entities.PollManager;
+import com.github.vladlipovanu.dat250.entities.User;
+import com.github.vladlipovanu.dat250.entities.Vote;
+import com.github.vladlipovanu.dat250.rabbitConfig.Tut5Sender;
 import com.github.vladlipovanu.dat250.requests.CreateVoteRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,6 +16,10 @@ import java.util.List;
 @RequestMapping("/api")
 public class VoteController {
     private final PollManager pollManager;
+
+    @Autowired(required = false)
+    private Tut5Sender message;
+
 
     public VoteController(final PollManager pollManager) {
         this.pollManager = pollManager;
@@ -25,6 +33,14 @@ public class VoteController {
         }
         user.getVotes().add(request.getVote());
         pollManager.addPoll(request.getPoll(),user);
+
+        if (message != null) {
+            Vote vote = request.getVote();
+            Long voteOption = (long) vote.getVoteOption();
+            Long userId = request.getUser().getId();
+            message.sendVote(voteOption,userId);
+            System.out.println("Vote published");
+        }
         return user;
     }
 
@@ -41,9 +57,26 @@ public class VoteController {
             }
             requestUser.getVotes().clear();
             requestUser.getVotes().add(newVote);
+
+            if (message != null) {
+                Vote vote = request.getVote();
+                Long voteOption = (long) vote.getVoteOption();
+                Long userId = request.getUser().getId();
+                message.sendVote(voteOption, userId);
+                System.out.println("Vote published");
+            }
             return requestUser;
+
         }
 
+        if (message != null) {
+            Vote vote = request.getVote();
+            Long voteOption = (long) vote.getVoteOption();
+            Long userId = request.getUser().getId();
+            message.sendVote(voteOption, userId);
+            System.out.println("Vote published");
+
+        }
         return updatedUser;
     }
 

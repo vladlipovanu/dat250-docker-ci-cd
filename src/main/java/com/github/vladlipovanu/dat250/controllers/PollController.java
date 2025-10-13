@@ -1,6 +1,8 @@
 package com.github.vladlipovanu.dat250.controllers;
 
-import com.github.vladlipovanu.dat250.dto.*;
+import com.github.vladlipovanu.dat250.entities.Poll;
+import com.github.vladlipovanu.dat250.entities.PollManager;
+import com.github.vladlipovanu.dat250.entities.User;
 import com.github.vladlipovanu.dat250.requests.CreatePollRequest;
 import org.springframework.web.bind.annotation.*;
 

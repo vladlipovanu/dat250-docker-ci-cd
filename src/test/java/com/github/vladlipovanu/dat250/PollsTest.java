@@ -16,10 +16,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.github.vladlipovanu.dat250.dto.Poll;
-import com.github.vladlipovanu.dat250.dto.User;
-import com.github.vladlipovanu.dat250.dto.VoteOption;
-import com.github.vladlipovanu.dat250.dto.Vote;
+import com.github.vladlipovanu.dat250.entities.Poll;
+import com.github.vladlipovanu.dat250.entities.User;
+import com.github.vladlipovanu.dat250.entities.VoteOption;
+import com.github.vladlipovanu.dat250.entities.Vote;
 
 
 public class PollsTest {

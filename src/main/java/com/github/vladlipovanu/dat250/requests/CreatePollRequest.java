@@ -1,9 +1,9 @@
 package com.github.vladlipovanu.dat250.requests;
 
 
-import com.github.vladlipovanu.dat250.dto.Poll;
-import com.github.vladlipovanu.dat250.dto.User;
-import com.github.vladlipovanu.dat250.dto.VoteOption;
+import com.github.vladlipovanu.dat250.entities.Poll;
+import com.github.vladlipovanu.dat250.entities.User;
+import com.github.vladlipovanu.dat250.entities.VoteOption;
 
 import java.util.List;
 
