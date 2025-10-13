@@ -15,12 +15,12 @@
 1. I always forget to open the Docker Desktop application in order for the servers to work.
 
 
-![Assignment 6 Rabbit 1.png](../pictures/Assignment 6 Rabbit 1)
+![Assignment 6 Rabbit 1.png](../pictures/Assignment%206%20Rabbit%201.png)
 
-![Assignment 6 Rabbit 2.png](../pictures/Assignment 6 Rabbit 2)
+![Assignment 6 Rabbit 2.png](../pictures/Assignment%206%20Rabbit%202.png)
 
-![Assignment 6 Rabbit 3.png](../pictures/Assignment 6 Rabbit 3)
+![Assignment 6 Rabbit 3.png](../pictures/Assignment%206%20Rabbit%203.png)
 
-![Assignment 6 Rabbit 4.png](../pictures/Assignment 6 Rabbit 4)
+![Assignment 6 Rabbit 4.png](../pictures/Assignment%206%20Rabbit%204.png)
 
-![Assignment 6 Rabbit 5.png](../pictures/Assignment 6 Rabbit 5)
+![Assignment 6 Rabbit 5.png](../pictures/Assignment%206%20Rabbit%205.png)
