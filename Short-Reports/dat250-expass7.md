@@ -27,5 +27,5 @@
 ![Docker Assignment 5.png](../pictures/%2FDocker%20Assignment%205.png)
 
 **Side Note:**
-The project is not finished yet. I find it intersting and I would like to work on it a bit more (for future showcases and getting experience), but right now I have a family issue that it takes a lot of my time. 
+The project is not finished yet. I find it interesting and I would like to work on it a bit more (for future showcases and getting experience), but right now I have a family issue that it takes a lot of my time. 
 So on the website that I host, the data in the components are just placeholders. I want to implement it later with API callings from the backend. I would also like to have a relational database (I'm more familiar with PostSQL) in order to make a functional application. I will also like to work more with RabbitMQ in order to make an exchange system, as well as fixing the pipelines for testing.
